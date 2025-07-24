@@ -54,4 +54,20 @@ router.get('/:applicationId', async (req, res) => {
     }
 });
 
+// DELETE /applications/:applicationId
+router.delete('/:applicationId', async (req, res) => {
+    try {
+        const currentUser = await User.findById(req.session.user._id);
+
+        const application = currentUser.applications.id(req.params.applicationId).deleteOne();
+
+        currentUser.save();
+
+        res.redirect(`/users/${currentUser._id}/applications`);
+    } catch (error) {
+        console.log(error);
+        res.redirect('/');
+    }
+});
+
 module.exports = router;
